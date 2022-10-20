@@ -2,18 +2,16 @@
 load_vaccination_data <- function(pr, dataset = NULL){
   if(pr == "qc"){
     # data from June 2021 to December 2022 with age up to 60+
-    # either the whole dataset or a sample of 10% of the data (~1,300 DAs)
-    if(dataset == "passport" | dataset == "descriptive"){
-      data <- fread("../vaccine-passport-data/vaccination_qc_passport.csv")
-    } else if(dataset == "passport_sample"){
+    # either the whole dataset (else statement) or a sample of 10% of the data (~1,300 DAs; if statement)
+    if(dataset == "passport_sample"){
       data <- fread("../vaccine-passport-data/vaccination_qc_passport_sample.csv")
+    } else {
+      data <- fread("../vaccine-passport-data/vaccination_qc_passport.csv")
     }
     
   } else if(pr == "on"){
     # data from June 2021 to December 2022 with age up to 60+
-    if(dataset == "passport" | dataset == "descriptive"){
-      data <- fread("../vaccine-passport-data/vaccination_on_passport.csv")
-    }
+    data <- fread("../vaccine-passport-data/vaccination_on_passport.csv")
   } else {
     # throw error if province not available
     stop("Province must be 'qc' for Quebec or 'on' for Ontario")
@@ -25,12 +23,12 @@ load_vaccination_data <- function(pr, dataset = NULL){
               codeDA = as.character(codeDA))]
   
   # remove province-wide "DA"
-  data_coverage <- data_coverage[codeDA != "0" & codeDA != "99999999"]
+  data <- data[codeDA != "0" & codeDA != "99999999"]
 
   return(data)
 }
 
-# Load results ----
+# Load results (main analyses) ----
 #' function to load 
 #'        observed data
 #'        ITS results
@@ -150,6 +148,45 @@ load_merge_data <- function(directory, result_type, R = 500,
   }
   
   return(data_results)
+}
+
+# Load results (supplementary analyses) ----
+# original_levels must always have the main model first
+load_data_sensitivity <- function(model_fit_path, data_its,
+                                  original_levels, new_lvl_names,
+                                  sens_var_original_name, sens_var_new_name){
+  # load data
+  data_sens <- read_csv(model_fit_path, col_types = cols())
+  data_sens$type <- factor(data_sens$type, 
+                           levels = c("Passport", "No passport\r\n(counterfactual)", "No passport\n(counterfactual)"),
+                           labels = c("Passport", "No passport\n(counterfactual)", "No passport\n(counterfactual)"))
+  
+  data_sens <- data_sens[data_sens[[sens_var_original_name]] %in% original_levels, ]
+  
+  # reorder so that first model shown is main model
+  data_sens[[sens_var_new_name]] <- factor(
+    data_sens[[sens_var_original_name]],
+    levels = as.character(original_levels),
+    labels = new_lvl_names
+  )
+  
+  # change labels to match nb of lines for both fits
+  data_sens$type <- factor(data_sens$type, 
+                           levels = c("Passport", "No passport\n(counterfactual)"),
+                           labels = c("Passport\n", "No passport\n(counterfactual)"))
+  
+  # replace the chosen ITS model in sensitivity data with the main ITS data
+  data_its[[sens_var_new_name]] <- factor(new_lvl_names[1])
+  
+  data_sens <- bind_rows(data_its,
+                         data_sens[data_sens[[sens_var_new_name]] != new_lvl_names[1], ])
+  
+  # reorder variables to output
+  data_sens <- data_sens %>% 
+    select(all_of(c(sens_var_new_name, sens_var_original_name)), type, age,
+           date_wk_end:rate_pred_cumul)
+  
+  return(data_sens)
 }
 
 #' function to load all counterfactual vaxcov results for a single variable

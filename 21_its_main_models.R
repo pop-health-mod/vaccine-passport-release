@@ -8,10 +8,6 @@ library(MetBrewer)
 
 source("./src/utils_load_data.R")
 source("./src/utils_its_bootstrap.R")
-
-source("./src/plot_main.R")
-source("./src/plot_setup.R")
-
 source("./02_setup_regression_formulas.R")
 
 # dataset to use

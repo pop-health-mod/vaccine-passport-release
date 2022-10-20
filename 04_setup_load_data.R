@@ -88,14 +88,21 @@ table(data_coverage[date_wk_end == min(date_wk_end) & age == min(age)]$quin_inco
 table(data_coverage[date_wk_end == min(date_wk_end) & age == min(age)]$quin_vismin)
 
 # ---- Subset data to date when trend became linear and add indicator ----
-if(which_dataset %in% c("passport", "passport_sample")){
-  data_passport <- data_coverage[date_wk_end >= "2021-07-03" & date_wk_end <= MODEL_END]
+if(which_dataset %in% c("passport", "passport_sample") | grepl("^sens", which_dataset)){
+  ## change date ranges of data for sensitivity analyses
+  if(which_dataset == "sensitivity_ts_start"){
+    date_min_keep <- as.Date("2021-07-03") - 7
+  } else {
+    date_min_keep <- as.Date("2021-07-03")
+  }
+  
+  data_passport <- data_coverage[date_wk_end >= date_min_keep & date_wk_end <= MODEL_END]
   unique(data_passport$date_wk_end)
   
   # create dummy date with the first data point as the 0-th date
   data_passport[, week := (weekCDC - min(weekCDC))]
   
-  # indicator for during impact
+  # indicator for impact period of vaccine passport
   data_passport[, `:=`(pass_anno = case_when(date_wk_end <  PASSPORT_START ~ 0, 
                                              date_wk_end >= PASSPORT_START & date_wk_end <= PASSPORT_END ~ 1,
                                              date_wk_end >  PASSPORT_END ~ 0))]
@@ -114,7 +121,7 @@ if(which_dataset %in% c("passport", "passport_sample")){
                 .(date_wk_start, date_wk_end, week, week_anno, pass_anno)]
   
   ## add time and dummy indicators to aggregate dataset
-  data_passport_da <- data_passport_da[date_wk_end >= "2021-07-03" & date_wk_end <= MODEL_END]
+  data_passport_da <- data_passport_da[date_wk_end >= date_min_keep & date_wk_end <= MODEL_END]
   
   data_passport_da <- left_join(data_passport_da,
                                 data_passport[codeDA == min(codeDA) & age == "12_17", 
