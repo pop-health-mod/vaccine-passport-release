@@ -150,6 +150,32 @@ load_merge_data <- function(directory, result_type, R = 500,
   return(data_results)
 }
 
+join_bootstraps <- function(file_path, R_partition, R_total){
+  # check number of partitions
+  nb_part <- as.integer(R_total / R_partition)
+  
+  # list to store all results
+  ls_boot <- vector("list", nb_part)
+  
+  # loop through all bootstrap files
+  for(i in 1:nb_part){
+    boot_results <- fread(sprintf(file_path, i * R_partition, R_total))
+    
+    # fix replicate number if necessary
+    if(i > 1){
+      boot_results$replicate_nb <- boot_results$replicate_nb + (R_partition * (i-1))
+    }
+    
+    # store in list
+    ls_boot[[i]] <- boot_results
+  }
+  
+  # consolidate into a single data.table
+  boot_results_compiled <- bind_rows(ls_boot)
+  
+  return(boot_results_compiled)
+}
+
 # Load results (supplementary analyses) ----
 # original_levels must always have the main model first
 load_data_sensitivity <- function(model_fit_path, data_its,
