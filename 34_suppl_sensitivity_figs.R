@@ -40,6 +40,13 @@ for(PROVINCE in c("qc", "on")){
   DO_CMA <- FALSE
   source("./03_setup_policy_dates.R")
   
+  # store each province's in separate variables
+  if(PROVINCE == "qc"){
+    MODEL_END_QC <- MODEL_END
+  } else if(PROVINCE == "on"){
+    MODEL_END_ON <- MODEL_END
+  }
+  
   # directories
   path_sens <- sprintf("./out/its-sensitivity-%s", PROVINCE)
   path_obs <- sprintf("./out/observed-%s", PROVINCE)

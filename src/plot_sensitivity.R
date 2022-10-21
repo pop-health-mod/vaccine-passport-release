@@ -4,6 +4,13 @@ plot_sensitivity_cover <- function(data_sens, impact_txt_sens, sens_var,
   # add sensitivity variable to bootstrap so that it only appears for main model
   data_ci[[sens_var]] <- factor("main model")
   
+  # need to store model end separately to plot Quebec's labels properly
+  if(PROVINCE == "qc"){
+    model_end_plt <- MODEL_END_QC
+  } else if(PROVINCE == "on"){
+    model_end_plt <- MODEL_END_ON
+  }
+  
   # plot
   plot_vaccine_cover(data_sens,
                      x_min = min(data_sens$date_wk_end)-5, 
@@ -21,12 +28,12 @@ plot_sensitivity_cover <- function(data_sens, impact_txt_sens, sens_var,
     geom_point(data = data_obs, aes(shape = "Observed\ndata"), alpha = alpha_plt) +
     # impact (need to plot old age UNDER)
     geom_label(data = impact_txt_sens %>% filter(age != "60_"), 
-               aes(x = MODEL_END, y = vax_cover + 1, label = impact_lab),
+               aes(x = model_end_plt, y = vax_cover + 1, label = impact_lab),
                hjust = 1, vjust = 0, size = 4.3, alpha = 0.8,
                label.size = NA,
                inherit.aes = FALSE) +
     geom_label(data = impact_txt_sens %>% filter(age == "60_"), 
-               aes(x = MODEL_END, y = vax_cover - 10, label = impact_lab),
+               aes(x = model_end_plt, y = vax_cover - 10, label = impact_lab),
                hjust = 1, vjust = 0, size = 4.3, alpha = 0.8,
                label.size = NA,
                inherit.aes = FALSE) +
