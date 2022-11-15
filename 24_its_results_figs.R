@@ -281,6 +281,8 @@ for(i in 1:2){
   png(sprintf("%s/fig_%s2_cover.png", fig_path, ifelse(i == 1, "", "S")),
       width = 40, height = 45, units = "cm", res = 320,
       type = "cairo-png")
+  # pdf(sprintf("%s/fig_%s2_cover.pdf", fig_path, ifelse(i == 1, "", "S")),
+  #     width = 40/cm(1), height = 45/cm(1))
   grid.arrange(plt_cover_ls[[ifelse(i == 1, "qc", "mtl")]],
                plt_cover_ls[[ifelse(i == 1, "on", "tor")]])
   # Quebec labels
@@ -317,6 +319,8 @@ for(i in 1:2){
   png(sprintf("%s/fig_%s1_rate.png", fig_path, ifelse(i == 1, "", "S")),
       width = 40, height = 45, units = "cm", res = 320,
       type = "cairo-png")
+  # pdf(sprintf("%s/fig_%s1_rate.pdf", fig_path, ifelse(i == 1, "", "S")),
+  #     width = 40/cm(1), height = 45/cm(1))
   grid.arrange(plt_rate_ls[[ifelse(i == 1, "qc", "mtl")]],
                plt_rate_ls[[ifelse(i == 1, "on", "tor")]])
   # Quebec labels
@@ -485,9 +489,18 @@ for(i in 1:2){
                            nrow = 2, byrow = T),
     widths = c(20.5/2, 20.5/2, 2)
   )
-  ggsave(sprintf("%s/fig_%s_interaction_age.sdoh.png", fig_path, 
+  # add white background
+  plt <- cowplot::ggdraw(plt) +
+    theme(plot.background = element_rect(fill = "white", colour = NA))
+  
+  ggsave(sprintf("%s/fig_%s_interaction_age.sdoh.png", fig_path,
                  ifelse(i == 1, "3", "S4")),
          plot = plt,
          device = "png", units = "cm",
          width = 20.5+2, height = 24, dpi = 320)
+  # ggsave(sprintf("%s/fig_%s_interaction_age.sdoh.pdf", fig_path,
+  #                ifelse(i == 1, "3", "S4")),
+  #        plot = plt,
+  #        device = "pdf", units = "cm",
+  #        width = 20.5+2, height = 24)
 }
