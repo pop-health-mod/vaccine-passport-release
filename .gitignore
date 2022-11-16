@@ -38,6 +38,6 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
-# results not to push
+# intermediate results not to push
 /out/its-*
 /out/observed-*

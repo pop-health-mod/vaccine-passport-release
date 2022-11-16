@@ -26,16 +26,17 @@ for(PROVINCE in c("qc", "on")){
       out_path <- sprintf("./out/observed-%s", PROVINCE)
     }
     
-    source("04_setup_load_data.R", echo = TRUE)
+    source("./04_setup_load_data.R", echo = TRUE)
     
     data_coverage_da <- data_passport_da
     rm(data_passport_da)
     
     # Age or SDOH stratified coverage ----
     # single stratification by age
-    data_cov_age <- data_coverage_prov[order(age, date_wk_start),
-                                       .(date_wk_start, date_wk_end, age, 
-                                         pop_rpdb, n_unvax, n_vacc_1dose)]
+    data_cov_age <- data_coverage[,
+                                  lapply(.SD, sum),
+                                  by = .(date_wk_start, date_wk_end, age),
+                                  .SDcols = c("pop_rpdb", "n_unvax", "n_vacc_1dose")]
     write.csv(data_cov_age, sprintf("%s/cover_1_age%s.csv", out_path, CMA_suffix), row.names = F)
     
     ### SDOH, single panels

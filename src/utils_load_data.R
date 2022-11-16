@@ -217,8 +217,8 @@ load_data_sensitivity <- function(model_fit_path, data_its,
 
 #' function to load all counterfactual vaxcov results for a single variable
 #' (age, income, vismin) into a single data frame and to format it for plotting
-load_sdoh_results <- function(directory, variable,
-                              R = 1000){
+load_ctfl_cov_results <- function(directory, variable,
+                                  R = 1000){
   vaxcov_grp_all <- c("49.9_under", "50_59.9_", "60_69.9_",
                       "70_79.9_", "80_89.9_", "90_over")
   

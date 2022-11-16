@@ -124,3 +124,32 @@ draw_sensitivity_labs <- function(lab_a, lab_b, lab_c,
   grid.text(sprintf("F) %s", ifelse(is.null(lab_f), lab_c, lab_f)), y_pos, 0.221, just = "left",
             gp = gpar(fontsize = 18))
 }
+
+# Hold baseline coverage constant (figures S3 and S5) ----
+plot_ctfl_cov_points <- function(data_impact, data_impact_ci,
+                                 var_name, strat_var_name,
+                                 var_title, plt_title,
+                                 impact_limits = c(-1, 3)){
+  # extract CIs
+  data_impact_ci <- data_impact_ci %>% 
+    filter(strat_var == strat_var_name) %>% 
+    mutate(vaxcov_lab = "Observed")
+  
+  # plot
+  ggplot(data_impact, aes(x = vaxcov_lab, col = get(var_name))) +
+    # null effect
+    geom_hline(yintercept = 0, linetype = "dashed") +
+    # data
+    geom_point(aes(y = impact), position = position_dodge(0.5)) +
+    geom_linerange(data = data_impact_ci, aes(ymin = impact_lci, ymax = impact_uci),
+                   position = position_dodge(0.5)) +
+    # aesthetics
+    coord_cartesian(ylim = impact_limits) +
+    # scale_colour_viridis_d(end = 0.8, guide = guide_legend(reverse = TRUE)) +
+    # scale_fill_viridis_d(end = 0.8, guide = guide_legend(reverse = TRUE)) +
+    scale_colour_viridis_d(end = 0.8) +
+    scale_fill_viridis_d(end = 0.8) +
+    # labels
+    labs(x = "Baseline vaccine coverage set to", y = "Vaccine passport impact\n(in percentage points)",
+         col = var_title, title = plt_title)
+}

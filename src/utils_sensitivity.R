@@ -36,3 +36,60 @@ compute_impact_sens <- function(data_sensitivity, data_obs, sens_var){
   
   return(impact_pt_estim)
 }
+
+# Hold baseline coverage constant (figures S3 and S5) ----
+predict_ctfl_vaxcovgrp <- function(data_da, its_fit,
+                                   var_select = c("week_anno", "vaxcov_grp"),
+                                   strat_var){
+  # predict rate and coverage setting vaxcov_passport to all possible values
+  for(cur_vaxgrp in unique(data_da$vaxcov_grp)){
+    # figure and output names
+    if(strat_var == "age"){
+      model_name <- sprintf("1_age_set_vaxc_%s", cur_vaxgrp)
+    } else if(strat_var == "quin_income"){
+      model_name <- sprintf("2a_inc_set_vaxc_%s", cur_vaxgrp)
+    } else if(strat_var == "quin_vismin"){
+      model_name <- sprintf("2b_vis_set_vaxc_%s", cur_vaxgrp)
+    }
+    
+    # create dataset in which all DAs have same coverage group
+    # Q: what would the results have been if we remove effect of baseline coverage
+    #    from the passport's impact
+    data_same_cv <- copy(data_da)
+    data_same_cv <- data_same_cv[, vaxcov_passport := cur_vaxgrp]
+    
+    ## predict rate + coverage using new dataset
+    prediction <- get_rate_and_coverage(data_same_cv, its_fit, var_select = var_select,
+                                        strat_var = strat_var,
+                                        predict_fit = TRUE)
+    
+    # save outputs as csv and plot rate and coverage
+    if(strat_var == "age"){
+      save_model_fit(prediction$model_fit[order(age, date_wk_end)][order(-type)], 
+                     model_name = model_name)
+    } else if(strat_var == "quin_income"){
+      save_model_fit(prediction$model_fit[order(quin_income, date_wk_end)][order(-type)], 
+                     model_name = model_name)
+    } else if(strat_var == "quin_vismin"){
+      save_model_fit(prediction$model_fit[order(quin_vismin, date_wk_end)][order(-type)], 
+                     model_name = model_name)
+    }
+  }
+}
+
+join_impact_obs_ctfl <- function(impact_ctfl, impact_obs,
+                                 strat_var_name, var_name){
+  # keep only observed impact for target variable
+  impact_obs <- impact_obs %>% 
+    filter(strat_var == strat_var_name) %>% 
+    mutate(vaxcov_grp_set_to = "Observed") %>% 
+    select(type, vaxcov_grp_set_to, original_lvl, date_wk_end,
+           impact, vax_cover, n_vacc_1dose, pop_rpdb)
+  names(impact_obs)[names(impact_obs) == "original_lvl"] <- var_name
+  
+  # add observed impacts to counterfactual data table
+  impact_ctfl <- bind_rows(impact_obs, impact_ctfl)
+  
+  # output
+  impact_ctfl
+}
