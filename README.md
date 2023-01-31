@@ -7,4 +7,4 @@ The results are presented in the pre-print titled _[Impact of a vaccine passport
 The data used in this study are not available for public release.
 
 # Authors
-[Jorge Luis Flores Anato](https://github.com/jl-flores), Huiting Ma, Mackenzie A. Hamilton, Yiqing Xia, Sam Harper, David Buckeridge, Marc Brisson, Michael P. Hillmer, Kamil Malikov, Aidin Kerem, Reed Beall, Stefan Baral, Ève Dubé, Sharmistha Mishra, Mathieu Maheu-Giroux
+[Jorge Luis Flores Anato](https://github.com/jl-flores), Huiting Ma, Mackenzie A. Hamilton, Yiqing Xia, Sam Harper, David Buckeridge, Marc Brisson, Michael P. Hillmer, Kamil Malikov, Aidin Kerem, Reed Beall, Caroline Wagner, Étienne Racine, Stefan Baral, Ève Dubé, Sharmistha Mishra, Mathieu Maheu-Giroux
