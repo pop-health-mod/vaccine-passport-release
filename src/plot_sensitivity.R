@@ -140,15 +140,11 @@ plot_ctfl_cov_points <- function(data_impact, data_impact_ci,
     # null effect
     geom_hline(yintercept = 0, linetype = "dashed") +
     # data
-    geom_point(aes(y = impact), position = position_dodge(0.5)) +
+    geom_point(aes(y = impact), position = position_dodge(0.5), size = 0.85) +
     geom_linerange(data = data_impact_ci, aes(ymin = impact_lci, ymax = impact_uci),
-                   position = position_dodge(0.5)) +
+                   position = position_dodge(0.5), linewidth = 0.35) +
     # aesthetics
     coord_cartesian(ylim = impact_limits) +
-    # scale_colour_viridis_d(end = 0.8, guide = guide_legend(reverse = TRUE)) +
-    # scale_fill_viridis_d(end = 0.8, guide = guide_legend(reverse = TRUE)) +
-    scale_colour_viridis_d(end = 0.8) +
-    scale_fill_viridis_d(end = 0.8) +
     # labels
     labs(x = "Baseline vaccine coverage set to", y = "Vaccine passport impact\n(in percentage points)",
          col = var_title, title = plt_title)

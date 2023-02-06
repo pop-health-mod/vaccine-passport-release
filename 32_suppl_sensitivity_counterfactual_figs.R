@@ -18,7 +18,12 @@ fig_path <- sprintf("./fig")
 PROVINCE <- "qc"
 CMA <- ifelse(PROVINCE == "qc", "mtl", "tor")
 
-## TODO: put graphs into lists, only plot at the end
+# lists to store plots
+plt_age_ls <- vector("list", 2)
+names(plt_age_ls) <- c("qc", "on")
+
+plt_income_ls <- plt_age_ls
+plt_vismin_ls <- plt_age_ls
 
 for(PROVINCE in c("qc", "on")){
   # which CMA to use
@@ -90,7 +95,7 @@ for(PROVINCE in c("qc", "on")){
   impact_vismin <- join_impact_obs_ctfl(impact_vismin, impact_pt_obs,
                                         "Visible minority quintile", "quin_vismin")
   
-  # Plot estimates ----
+  # Plot estimates (individual) ----
   # parameters for plotting the absolute and relative (to unvaccinated before 
   # the announcement) impact of vaccine passport
   # change plot label based on location
@@ -156,4 +161,134 @@ for(PROVINCE in c("qc", "on")){
     )
   
   ## Plot ----
+  # list of quintile ranking names
+  # corresponds to 1:5 for income
+  # and to 5:1 for visible minority
+  sdoh_labels <- c("Lowest", "2nd\nlowest", "Middle", "2nd\nhighest", "Highest")
+  
+  # age
+  plt_age_ls[[PROVINCE]] <- plot_ctfl_cov_points(
+    impact_age, impact_ci,
+    "age", "Age", "Age", plt_title
+  ) +
+    scale_colour_viridis_d(end = 0.8, guide = guide_legend(reverse = TRUE))
+  
+  # income
+  plt_income_ls[[PROVINCE]] <- plot_ctfl_cov_points(
+    impact_income, impact_ci,
+    "quin_income", "Income quintile", "Income\nquintile", plt_title
+  ) +
+    scale_colour_viridis_d(end = 0.8, labels = sdoh_labels)
+  
+  # visible minority
+  plt_vismin_ls[[PROVINCE]] <- plot_ctfl_cov_points(
+    impact_vismin, impact_ci,
+    "quin_vismin", "Visible minority quintile", "Proportion\nracialized quintile", plt_title
+  ) +
+    scale_colour_viridis_d(end = 0.8, labels = rev(sdoh_labels))
 }
+
+# Plot final figures ----
+
+## Age ----
+# format plot
+theme_age_common <- theme(
+  legend.position = "none",
+  # titles text
+  plot.title = element_text(size = 8),
+  legend.title = element_text(size = 8),
+  axis.title.y = element_blank(),
+  axis.title.x = element_text(size = 8),
+  # smaller text
+  axis.text.y = element_text(size = 6),
+  axis.text.x = element_text(size = 6, hjust = 1, angle = 45),
+  legend.text = element_text(size = 6)
+)
+
+plt_age_ls[["qc"]] <- plt_age_ls[["qc"]] + theme_age_common + theme(plot.background = element_blank())
+plt_age_ls[["on"]] <- plt_age_ls[["on"]] + theme_age_common
+
+# extract legend
+p_legend_age <- cowplot::get_legend(
+  plt_age_ls[["qc"]] +
+    theme(legend.position = "right",
+          legend.key.width = unit(0.4, "line"),
+          legend.key.height = unit(0.8, "line"))
+)
+
+p_yaxis_age <- grid::textGrob(
+  "Vaccine passport impact\n(in percentage points)",
+  gp = grid::gpar(fontsize = 8, lineheight = 0.8), rot = 90
+)
+
+# plot together
+png(sprintf("%s/fig_S3_ctfl_cover_age.png", fig_path), type = "cairo-png",
+    width = 17, height = 6, units = "cm", res = 320)
+grid.arrange(p_yaxis_age, plt_age_ls[["qc"]], plt_age_ls[["on"]], p_legend_age,
+             nrow = 1, widths = unit(c(0.4, 14.5/2, 14.5/2, 1), c("cm")))
+dev.off()
+
+## Income and visible minority quintile ----
+# format plot
+theme_sdoh_common <- theme(
+  legend.position = "none",
+  # titles text
+  plot.title = element_text(size = 8),
+  legend.title = element_text(size = 8),
+  axis.title.y = element_blank(),
+  axis.title.x = element_text(size = 8),
+  # smaller text
+  axis.text.y = element_text(size = 6),
+  axis.text.x = element_text(size = 6, hjust = 1, angle = 45),
+  legend.text = element_text(size = 6),
+  plot.background = element_blank()
+)
+
+# income
+plt_income_ls[["qc"]] <- plt_income_ls[["qc"]] + theme_sdoh_common
+plt_income_ls[["on"]] <- plt_income_ls[["on"]] + theme_sdoh_common
+
+# visible minority
+plt_vismin_ls[["qc"]] <- plt_vismin_ls[["qc"]] + theme_sdoh_common
+plt_vismin_ls[["on"]] <- plt_vismin_ls[["on"]] + theme_sdoh_common
+
+# extract legends
+p_legend_income <- cowplot::get_legend(
+  plt_income_ls[["qc"]] +
+    theme(legend.position = "bottom",
+          legend.key.width = unit(0.4, "line"),
+          legend.key.height = unit(0.8, "line"))
+)
+
+p_legend_vismin <- cowplot::get_legend(
+  plt_vismin_ls[["qc"]] +
+    theme(legend.position = "bottom",
+          legend.key.width = unit(0.4, "line"),
+          legend.key.height = unit(0.8, "line"))
+)
+
+p_yaxis_sdoh <- grid::textGrob(
+  "Vaccine passport impact (in percentage points)",
+  gp = grid::gpar(fontsize = 8), rot = 90
+)
+
+# plot together
+png(sprintf("%s/fig_S5_ctfl_cover_sdoh.png", fig_path), type = "cairo-png",
+    width = 17, height = 6*2+1, units = "cm", res = 320)
+grid.arrange(
+  p_yaxis_sdoh, p_yaxis_sdoh,
+  plt_income_ls[["qc"]], plt_vismin_ls[["qc"]],
+  plt_income_ls[["on"]], plt_vismin_ls[["on"]],
+  p_legend_income, p_legend_vismin,
+  # layout
+  layout_matrix = matrix(c(1, 3, 2, 4,
+                           1, 5, 2, 6,
+                           7, 7, 8, 8),
+                         ncol = 4, byrow = T),
+  # sizes
+  widths = unit(c(0.5, 16.3/2, 0.3, 16.3/2), c("cm")),
+  heights = unit(c(6, 6, 1), c("cm"))
+)
+dev.off()
+
+
