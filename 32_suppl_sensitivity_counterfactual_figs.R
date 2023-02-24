@@ -99,8 +99,8 @@ for(PROVINCE in c("qc", "on")){
   # parameters for plotting the absolute and relative (to unvaccinated before 
   # the announcement) impact of vaccine passport
   # change plot label based on location
-  plt_title <- case_when(PROVINCE == "qc" ~ "A) Québec",
-                         PROVINCE == "on" ~ "B) Ontario")
+  plt_location <- case_when(PROVINCE == "qc" ~ "Québec",
+                            PROVINCE == "on" ~ "Ontario")
   
   ## Clean up labels ----
   lvls_vax <- c("Observed", "49.9_under", "50_59.9_", "60_69.9_", 
@@ -169,21 +169,24 @@ for(PROVINCE in c("qc", "on")){
   # age
   plt_age_ls[[PROVINCE]] <- plot_ctfl_cov_points(
     impact_age, impact_ci,
-    "age", "Age", "Age", plt_title
+    "age", "Age", "Age",
+    paste(ifelse(PROVINCE == "qc", "A)", "B)"), plt_location)
   ) +
     scale_colour_viridis_d(end = 0.8, guide = guide_legend(reverse = TRUE))
   
   # income
   plt_income_ls[[PROVINCE]] <- plot_ctfl_cov_points(
     impact_income, impact_ci,
-    "quin_income", "Income quintile", "Income\nquintile", plt_title
+    "quin_income", "Income quintile", "Income\nquintile",
+    paste(ifelse(PROVINCE == "qc", "A)", "C)"), plt_location)
   ) +
     scale_colour_viridis_d(end = 0.8, labels = sdoh_labels)
   
   # visible minority
   plt_vismin_ls[[PROVINCE]] <- plot_ctfl_cov_points(
     impact_vismin, impact_ci,
-    "quin_vismin", "Visible minority quintile", "Proportion\nracialized quintile", plt_title
+    "quin_vismin", "Visible minority quintile", "Proportion\nracialized quintile",
+    paste(ifelse(PROVINCE == "qc", "B)", "D)"), plt_location)
   ) +
     scale_colour_viridis_d(end = 0.8, labels = rev(sdoh_labels))
 }
@@ -200,9 +203,9 @@ theme_age_common <- theme(
   axis.title.y = element_blank(),
   axis.title.x = element_text(size = 8),
   # smaller text
-  axis.text.y = element_text(size = 6),
-  axis.text.x = element_text(size = 6, hjust = 1, angle = 45),
-  legend.text = element_text(size = 6)
+  axis.text.y = element_text(size = 6.5),
+  axis.text.x = element_text(size = 6.5, hjust = 1, angle = 30),
+  legend.text = element_text(size = 6.5)
 )
 
 plt_age_ls[["qc"]] <- plt_age_ls[["qc"]] + theme_age_common + theme(plot.background = element_blank())
@@ -238,9 +241,9 @@ theme_sdoh_common <- theme(
   axis.title.y = element_blank(),
   axis.title.x = element_text(size = 8),
   # smaller text
-  axis.text.y = element_text(size = 6),
-  axis.text.x = element_text(size = 6, hjust = 1, angle = 45),
-  legend.text = element_text(size = 6),
+  axis.text.y = element_text(size = 6.5),
+  axis.text.x = element_text(size = 6.5, hjust = 1, angle = 30),
+  legend.text = element_text(size = 6.5),
   plot.background = element_blank()
 )
 

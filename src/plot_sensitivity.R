@@ -149,3 +149,31 @@ plot_ctfl_cov_points <- function(data_impact, data_impact_ci,
     labs(x = "Baseline vaccine coverage set to", y = "Vaccine passport impact\n(in percentage points)",
          col = var_title, title = plt_title)
 }
+
+# Distribution of DA-level rates (figures S11-S13) ----
+plot_distr_rate <- function(data, data_stats,
+                            strat_var, label_fn,
+                            y_max = 15000,
+                            x_axis = FALSE){
+  plot_vaccine_rate(data, colour_var = NULL,
+                    x_min = min(data$date_wk_end) - 7, 
+                    x_max = max(data$date_wk_end) + 7,
+                    y_max = y_max,
+                    x_axis = x_axis) +
+    geom_jitter(size = .0005, aes(shape = "DA-level rate"),
+                alpha = alpha_plt) +
+    
+    # draw the mean and variance
+    geom_linerange(data = data_stats,
+                   aes(xmin = date_wk_end - 2.5, xmax = date_wk_end + 2.5, y = rate_wkly,
+                       col = "Group-level rate"), size = 0.5,
+                   key_glyph = "path") +
+    
+    scale_color_manual(values = c("red")) +
+    
+    facet_wrap(c(strat_var), labeller = label_fn) +
+    labs(title = ifelse(PROVINCE == "qc", "A)", "B)"),
+         x = "Date (end of epidemiological week)",
+         col = NULL, shape = NULL) +
+    theme_pointcloud + guides_pointcloud
+}
