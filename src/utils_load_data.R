@@ -178,7 +178,7 @@ join_bootstraps <- function(file_path, R_partition, R_total){
 
 # Load results (supplementary analyses) ----
 # original_levels must always have the main model first
-load_data_sensitivity <- function(model_fit_path, data_its,
+load_data_sensitivity <- function(model_fit_path,
                                   original_levels, new_lvl_names,
                                   sens_var_original_name, sens_var_new_name){
   # load data
@@ -200,12 +200,6 @@ load_data_sensitivity <- function(model_fit_path, data_its,
   data_sens$type <- factor(data_sens$type, 
                            levels = c("Passport", "No passport\n(counterfactual)"),
                            labels = c("Passport\n", "No passport\n(counterfactual)"))
-  
-  # replace the chosen ITS model in sensitivity data with the main ITS data
-  data_its[[sens_var_new_name]] <- factor(new_lvl_names[1])
-  
-  data_sens <- bind_rows(data_its,
-                         data_sens[data_sens[[sens_var_new_name]] != new_lvl_names[1], ])
   
   # reorder variables to output
   data_sens <- data_sens %>% 

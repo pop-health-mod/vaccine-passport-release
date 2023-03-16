@@ -18,7 +18,7 @@ theme_single_panel <- theme(axis.title = element_text(size = 8),
 # put shape before colour and make legend key bigger
 guides_man_fig1.2 <- guides(
   shape = guide_legend(order = 1, override.aes = list(size = 4)),
-  colour = guide_legend(order = 2, override.aes = list(size = 1.5)),
+  colour = guide_legend(order = 2, override.aes = list(size = 1.5, linewidth = 1.5)),
   fill = guide_legend(order = 2)
 )
 

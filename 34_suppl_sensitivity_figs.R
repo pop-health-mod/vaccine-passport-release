@@ -144,7 +144,6 @@ for(PROVINCE in c("qc", "on")){
   # load data
   data_ts_start <- load_data_sensitivity(
     sprintf("%s/predicted_start_of_timeseries_fitted_values.csv", path_sens),
-    data_its = data_its,
     original_levels = as.Date(c("2021-07-03", "2021-06-26", "2021-07-10")), 
     new_lvl_names = c("main model", "minus 1 week", "plus 1 week"),
     sens_var_original_name = "start_ts_date", 
@@ -172,9 +171,8 @@ for(PROVINCE in c("qc", "on")){
   # load data
   data_alt_length <- load_data_sensitivity(
     sprintf("%s/predicted_length_of_impact_fitted_values.csv", path_sens),
-    data_its = data_its,
     # original_levels = c("6 weeks", "5 weeks", "7 weeks"),
-    original_levels = PASSPORT_END + c(-7, 0, 7),
+    original_levels = PASSPORT_END + c(0, -7, 7),
     new_lvl_names = c("main model", "5 weeks", "7 weeks"),
     sens_var_original_name = "stop_date", 
     sens_var_new_name = "pass_length"
@@ -207,7 +205,6 @@ for(PROVINCE in c("qc", "on")){
   # load data
   data_altmod <- load_data_sensitivity(
     sprintf("%s/predicted_alt_model_specs_fitted_values.csv", path_sens),
-    data_its = data_its,
     original_levels = c("final_model", "alt_model", "linear_model"),
     new_lvl_names = c("main model", "alt_model", "linear_model"),
     sens_var_original_name = "model_specification", 
