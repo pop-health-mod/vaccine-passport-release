@@ -1,7 +1,10 @@
 # Alternative model specification functions ----
-compute_impact_sens <- function(data_sensitivity, data_obs, sens_var){
+compute_impact_sens <- function(data_sensitivity, data_obs, sens_var,
+                                drop_main_model = TRUE){
   # drop main ITS from sensitivity (using fit from main model)
-  data_sensitivity <- data_sensitivity[data_sensitivity[[sens_var]] != "main model", ]
+  if(drop_main_model){
+    data_sensitivity <- data_sensitivity[data_sensitivity[[sens_var]] != "main model", ]
+  }
   
   ## impact point estimates, comparing to observed observed
   # create a replicate of the observed data (only last timepoint) for each sensitivity fit
