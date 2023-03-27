@@ -25,9 +25,9 @@ for(PROVINCE in c("qc", "on")){
     CMA_suffix <- ifelse(DO_CMA, paste("_", CMA, sep = ""), "")
     
     if(DO_CMA){
-      out_path <- sprintf("./out/its-fit-%s-%s", PROVINCE, CMA)
+      path_out <- sprintf("../vaccine-passport-data/out/its-fit-%s-%s", PROVINCE, CMA)
     } else {
-      out_path <- sprintf("./out/its-fit-%s", PROVINCE)
+      path_out <- sprintf("../vaccine-passport-data/out/its-fit-%s", PROVINCE)
     }
     
     # Load vaccination coverage data ----

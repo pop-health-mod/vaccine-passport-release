@@ -47,9 +47,9 @@ for(PROVINCE in c("qc", "on")){
     }
     
     if(DO_CMA){
-      out_path <- sprintf("./out/its-boot-part/%s-%s", PROVINCE, CMA)
+      path_out <- sprintf("../vaccine-passport-data/out/its-boot-part/%s-%s", PROVINCE, CMA)
     } else {
-      out_path <- sprintf("./out/its-boot-part/%s", PROVINCE)
+      path_out <- sprintf("../vaccine-passport-data/out/its-boot-part/%s", PROVINCE)
     }
     
     # Data loading and processing ----
@@ -74,7 +74,7 @@ for(PROVINCE in c("qc", "on")){
                                             R = split_rep, track_time = TRUE)
       
       fwrite(boot_repl_age, sprintf("%s/bootstrap_model1_age.R%s-%s.csv",
-                                    out_path, i * split_rep, nb_replicates * boot_rnd_ttl))
+                                    path_out, i * split_rep, nb_replicates * boot_rnd_ttl))
       rm(boot_repl_age)
     }
     
@@ -90,7 +90,7 @@ for(PROVINCE in c("qc", "on")){
                                                R = split_rep, track_time = TRUE)
       
       fwrite(boot_repl_income, sprintf("%s/bootstrap_model2a_income.R%s-%s.csv",
-                                       out_path, i * split_rep, nb_replicates * boot_rnd_ttl))
+                                       path_out, i * split_rep, nb_replicates * boot_rnd_ttl))
       rm(boot_repl_income)
     }
     
@@ -105,14 +105,14 @@ for(PROVINCE in c("qc", "on")){
                                                R = split_rep, track_time = TRUE)
       
       fwrite(boot_repl_vismin, sprintf("%s/bootstrap_model2b_vismin.R%s-%s.csv",
-                                       out_path, i * split_rep, nb_replicates * boot_rnd_ttl))
+                                       path_out, i * split_rep, nb_replicates * boot_rnd_ttl))
       rm(boot_repl_vismin)
     }
     
     # Model 3: age x SDOH ----
     ## 3a: income ----
     cat("\n3a:\tIncome x age model==========\n")
-    for(i in ((1:loop_intx) + loop_intx * (boot_rnd-1))){
+    for(i in ((1:loop_intx) + loop_i../vaccine-passport-data/x * (boot_rnd-1))){
       # track progress
       cat(sprintf("Run %s out of %s.\n", i, loop_intx * boot_rnd))
       # run and save bootstrap
@@ -122,7 +122,7 @@ for(PROVINCE in c("qc", "on")){
                                                    pred_by_age = (!DO_CMA & PROVINCE == "on"))
       
       fwrite(boot_repl_age.income, sprintf("%s/bootstrap_model3a_age.income.R%s-%s.csv",
-                                           out_path, i * split_rep_intx, nb_replicates * boot_rnd_ttl))
+                                           path_out, i * split_rep_intx, nb_replicates * boot_rnd_ttl))
       rm(boot_repl_age.income)
     }
     
@@ -138,7 +138,7 @@ for(PROVINCE in c("qc", "on")){
                                                    pred_by_age = (!DO_CMA & PROVINCE == "on"))
       
       fwrite(boot_repl_age.vismin, sprintf("%s/bootstrap_model3b_age.vismin.R%s-%s.csv",
-                                           out_path, i * split_rep_intx, nb_replicates * boot_rnd_ttl))
+                                           path_out, i * split_rep_intx, nb_replicates * boot_rnd_ttl))
       rm(boot_repl_age.vismin)
     }
     

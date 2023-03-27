@@ -16,7 +16,7 @@ for(PROVINCE in c("qc", "on")){
   DO_CMA <- FALSE
   source("./03_setup_policy_dates.R")
   
-  out_path <- sprintf("./out/its-sensitivity-%s", PROVINCE)
+  path_out <- sprintf("./vaccine-passport-data/out/its-sensitivity-%s", PROVINCE)
   
   # 1. Change starting date of time-series ----
   cat("Sensitivity 1:\tChange starting date of time-series ==========================\n")
@@ -117,7 +117,7 @@ for(PROVINCE in c("qc", "on")){
   
   df_model_dx <- df_model_dx[, c("start_ts_date", "knot_position.wk", "knot_position.date",
                                  "aic_unvax", "bic_unvax", "ssr_null", "dev_fit")]
-  write.csv(df_model_dx, sprintf("%s/start_of_timeseries_dx.csv", out_path), row.names = FALSE)
+  write.csv(df_model_dx, sprintf("%s/start_of_timeseries_dx.csv", path_out), row.names = FALSE)
   
   # Load data for 2nd and 3rd sensitivity analyses ----
   which_dataset <- "passport"
@@ -216,7 +216,7 @@ for(PROVINCE in c("qc", "on")){
                                  "knot_position.wk", "knot_position.date",
                                  "aic_unvax", "bic_unvax", "ssr_null", "dev_fit")]
   
-  write.csv(df_model_dx, sprintf("%s/length_of_impact_dx.csv", out_path), row.names = FALSE)
+  write.csv(df_model_dx, sprintf("%s/length_of_impact_dx.csv", path_out), row.names = FALSE)
   
   df_fit_rate.cover
   save_model_fit(df_fit_rate.cover, "length_of_impact")
@@ -340,5 +340,5 @@ for(PROVINCE in c("qc", "on")){
                                  "knot_position.wk", "knot_position.date",
                                  "aic_unvax", "bic_unvax", "ssr_null", "dev_fit")]
   
-  write.csv(df_model_dx, sprintf("%s/alt_model_specs_dx.csv", out_path), row.names = FALSE)
+  write.csv(df_model_dx, sprintf("%s/alt_model_specs_dx.csv", path_out), row.names = FALSE)
 }

@@ -318,10 +318,10 @@ compute_boot_ci <- function(data, group_var,
 save_model_fit <- function(predictions, model_name){
   if(DO_CMA){
     save_path <- sprintf("%s/predicted_%s_fitted_values_%s.csv", 
-                         out_path, model_name, CMA)
+                         path_out, model_name, CMA)
   } else {
     save_path <- sprintf("%s/predicted_%s_fitted_values.csv", 
-                         out_path, model_name)
+                         path_out, model_name)
   }
   write.csv(predictions, save_path, row.names = FALSE)
 }
@@ -330,5 +330,5 @@ save_model_fit <- function(predictions, model_name){
 save_model_coeff <- function(fit, model_name){
   broom::tidy(fit) %>% 
       mutate(estimate_exp = exp(estimate), .after = estimate) %>% 
-      fwrite(file = sprintf("./out/its-coeff/%s_%s%s.csv", model_name, PROVINCE, CMA_suffix))
+      fwrite(file = sprintf("%s/its-coeff/%s_%s%s.csv", path_out, model_name, PROVINCE, CMA_suffix))
 }

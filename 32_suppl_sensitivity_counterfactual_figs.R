@@ -34,10 +34,10 @@ for(PROVINCE in c("qc", "on")){
   source("./03_setup_policy_dates.R")
   
   # input directories for data
-  path_its <- sprintf("./out/its-fit-%s", PROVINCE)
-  path_boot <- sprintf("./out/its-boot-%s", PROVINCE)
-  path_ctfl <- sprintf("./out/its-sensitivity-%s/ctfl-coverage", PROVINCE)
-  path_obs <- sprintf("./out/observed-%s", PROVINCE)
+  path_its <- sprintf("../vaccine-passport-data/out/its-fit-%s", PROVINCE)
+  path_boot <- sprintf("../vaccine-passport-data/out/its-boot-%s", PROVINCE)
+  path_ctfl <- sprintf("../vaccine-passport-data/out/its-sensitivity-%s/ctfl-coverage", PROVINCE)
+  path_obs <- sprintf("../vaccine-passport-data/out/observed-%s", PROVINCE)
   city_suffix <- ""
   
   # Load data ----

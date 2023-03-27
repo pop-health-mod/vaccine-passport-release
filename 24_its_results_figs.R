@@ -36,15 +36,15 @@ for(PROVINCE in c("qc", "on")){
   # input directories for data
   for(DO_CMA in c(FALSE, TRUE)){
     if(DO_CMA){
-      path_its <- sprintf("./out/its-fit-%s-%s", PROVINCE, CMA)
-      path_boot <- sprintf("./out/its-boot-%s-%s", PROVINCE, CMA)
-      path_obs <- sprintf("./out/observed-%s-%s", PROVINCE, CMA)
+      path_its <- sprintf("../vaccine-passport-data/out/its-fit-%s-%s", PROVINCE, CMA)
+      path_boot <- sprintf("../vaccine-passport-data/out/its-boot-%s-%s", PROVINCE, CMA)
+      path_obs <- sprintf("../vaccine-passport-data/out/observed-%s-%s", PROVINCE, CMA)
       
       city_suffix <- paste("_", CMA, sep = "")
     } else {
-      path_its <- sprintf("./out/its-fit-%s", PROVINCE)
-      path_boot <- sprintf("./out/its-boot-%s", PROVINCE)
-      path_obs <- sprintf("./out/observed-%s", PROVINCE)
+      path_its <- sprintf("../vaccine-passport-data/out/its-fit-%s", PROVINCE)
+      path_boot <- sprintf("../vaccine-passport-data/out/its-boot-%s", PROVINCE)
+      path_obs <- sprintf("../vaccine-passport-data/out/observed-%s", PROVINCE)
       
       city_suffix <- ""
     }
@@ -362,15 +362,15 @@ for(PROVINCE in c("qc", "on")){
   # input directories for data
   for(DO_CMA in c(FALSE, TRUE)){
     if(DO_CMA){
-      path_its <- sprintf("./out/its-fit-%s-%s", PROVINCE, CMA)
-      path_boot <- sprintf("./out/its-boot-%s-%s", PROVINCE, CMA)
-      path_obs <- sprintf("./out/observed-%s-%s", PROVINCE, CMA)
+      path_its <- sprintf("../vaccine-passport-data/out/its-fit-%s-%s", PROVINCE, CMA)
+      path_boot <- sprintf("../vaccine-passport-data/out/its-boot-%s-%s", PROVINCE, CMA)
+      path_obs <- sprintf("../vaccine-passport-data/out/observed-%s-%s", PROVINCE, CMA)
       
       city_suffix <- paste("_", CMA, sep = "")
     } else {
-      path_its <- sprintf("./out/its-fit-%s", PROVINCE)
-      path_boot <- sprintf("./out/its-boot-%s", PROVINCE)
-      path_obs <- sprintf("./out/observed-%s", PROVINCE)
+      path_its <- sprintf("../vaccine-passport-data/out/its-fit-%s", PROVINCE)
+      path_boot <- sprintf("../vaccine-passport-data/out/its-boot-%s", PROVINCE)
+      path_obs <- sprintf("../vaccine-passport-data/out/observed-%s", PROVINCE)
       
       city_suffix <- ""
     }

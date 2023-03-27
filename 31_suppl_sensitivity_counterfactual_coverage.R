@@ -27,7 +27,7 @@ for(PROVINCE in c("qc", "on")){
   # add CMA name to the end of saved files
   CMA_suffix <- ifelse(DO_CMA, paste("_", CMA, sep = ""), "")
   
-  out_path <- sprintf("./out/its-sensitivity-%s/ctfl-coverage", PROVINCE)
+  path_out <- sprintf("./vaccine-passport-data/out/its-sensitivity-%s/ctfl-coverage", PROVINCE)
   
   # Load vaccination coverage data ----
   source("./04_setup_load_data.R", echo = TRUE)

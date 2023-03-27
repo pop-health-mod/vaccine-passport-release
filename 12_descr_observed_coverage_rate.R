@@ -21,9 +21,9 @@ for(PROVINCE in c("qc", "on")){
     CMA_suffix <- ifelse(DO_CMA, paste("_", CMA, sep = ""), "")
     
     if(DO_CMA){
-      out_path <- sprintf("./out/observed-%s-%s", PROVINCE, CMA)
+      out_path <- sprintf("../vaccine-passport-data/out/observed-%s-%s", PROVINCE, CMA)
     } else {
-      out_path <- sprintf("./out/observed-%s", PROVINCE)
+      out_path <- sprintf("../vaccine-passport-data/out/observed-%s", PROVINCE)
     }
     
     source("./04_setup_load_data.R", echo = TRUE)

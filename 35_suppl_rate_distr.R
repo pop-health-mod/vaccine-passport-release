@@ -33,9 +33,6 @@ for(PROVINCE in c("qc", "on")){
   # passport dates
   source("./03_setup_policy_dates.R")
   
-  # file paths
-  out_path <- sprintf("./%s-descriptive-out", PROVINCE)
-  
   # Load vaccination coverage data ----
   source("./04_setup_load_data.R", echo = TRUE)
   data_coverage <- data_coverage[date_wk_end >= "2021-07-03" & date_wk_end <= MODEL_END]

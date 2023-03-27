@@ -16,7 +16,7 @@ list_paths <- c()
 for(i in 1:length(list_directory)){
   for(j in 1:length(list_model_names)){
     # create base of the file path, add wildcards, then store
-    str_path <- sprintf("./out/%s/%s.R", list_directory[i], list_model_names[j])
+    str_path <- sprintf("../vaccine-passport-data/out/%s/%s.R", list_directory[i], list_model_names[j])
     str_path <- paste(str_path, "%s-%s.csv", sep = "")
     
     list_paths <- append(list_paths, str_path)

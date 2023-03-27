@@ -48,10 +48,10 @@ for(PROVINCE in c("qc", "on")){
   }
   
   # directories
-  path_sens <- sprintf("./out/its-sensitivity-%s", PROVINCE)
-  path_obs <- sprintf("./out/observed-%s", PROVINCE)
-  path_its <- sprintf("./out/its-fit-%s", PROVINCE)
-  path_boot <- sprintf("./out/its-boot-%s", PROVINCE)
+  path_sens <- sprintf("./vaccine-passport-data/out/its-sensitivity-%s", PROVINCE)
+  path_obs <- sprintf("./vaccine-passport-data/out/observed-%s", PROVINCE)
+  path_its <- sprintf("./vaccine-passport-data/out/its-fit-%s", PROVINCE)
+  path_boot <- sprintf("./vaccine-passport-data/out/its-boot-%s", PROVINCE)
   
   # tibble for policy milestones labels
   policy_txt <- tibble(event = c("Announ.", "Implem."),
