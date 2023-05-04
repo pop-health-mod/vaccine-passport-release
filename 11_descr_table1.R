@@ -88,5 +88,5 @@ fwrite(tbl_1_final, "./out/manuscript-tables/table_1_popsize_vc_prov.csv")
 # Montreal and Toronto
 tbl_s1_final <- bind_rows(tbl_s1_cma)
 tbl_s1_final <- select(tbl_s1_final, region, age, da_number, pop_rpdb, starts_with("cv"), starts_with("n_Vacc"))
-fwrite(tbl_s1_final, "./out/manuscript-tables/table_S1_popsize_vc_cma.csv")
+fwrite(tbl_s1_final, "./out/manuscript-tables/table_S2_popsize_vc_cma.csv")
 
