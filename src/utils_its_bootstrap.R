@@ -233,10 +233,10 @@ get_rate_and_coverage <- function(data, its_fit, var_select = NULL, strat_var,
 }
 
 # ---- Process result ----
-# compute impact point estimates across selected grouping variables
-# point estimate is estimated as coverage_fit - coverage_counterfactual
-# code assumes only fit (or observed) and counterfactual are supplied, and that 
-# the counterfactual is the second level in the factor
+#' compute absolute impact point estimates across selected grouping variables
+#' point estimate is estimated as coverage_fit - coverage_counterfactual
+#' code assumes only fit (or observed) and counterfactual are supplied, and that 
+#' the counterfactual is the second level in the factor
 compute_impact <- function(data, date_select, var_group_by = "age",
                            numer = "n_vacc_1dose", denom = "pop_rpdb"){
   # limit to selected date for impact and order
@@ -271,9 +271,9 @@ compute_impact_ci <- function(data_bootstrap, data_observed_,
     ungroup()
   
   # compute the impact in each replicate
-  data_impact <- bind_rows(data_bootstrap %>% filter(type == "No passport\n(counterfactual)"),
-                           data_obs_dupl)
-  impact_ci <- compute_impact(data_impact, date_select = date_select, 
+  data_imp <- bind_rows(data_bootstrap %>% filter(type == "No passport\n(counterfactual)"),
+                        data_obs_dupl)
+  impact_ci <- compute_impact(data_imp, date_select = date_select, 
                               var_group_by = c("replicate_nb", var_group_by),
                               numer = numer, denom = denom)
   
@@ -288,7 +288,81 @@ compute_impact_ci <- function(data_bootstrap, data_observed_,
   return(impact_ci)
 }
 
-# compute bootstrapped confidence intervals
+# rescales data by subtracting the number of doses as of rescale_date
+subtract_base_doses <- function(data, data_obs, rescale_date){
+  # retrieve number of doses given by a specified baseline
+  data_vacc_adjust <- data_obs %>% 
+    filter(date_wk_end == rescale_date) %>% 
+    select(strat_var, strat_lvl, n_vacc_1dose, n_unvax)
+  
+  # add to results
+  data_vacc_adjust <- data_vacc_adjust %>% 
+    rename(n_vacc_baseline = n_vacc_1dose, n_unvax_baseline = n_unvax)
+  
+  data <- left_join(data, data_vacc_adjust, by = c("strat_var", "strat_lvl"))
+  
+  # remove number of vaccines at baseline from cumulative number vaccinated
+  data <- data %>% mutate(n_vacc_adjusted = n_vacc_1dose - n_vacc_baseline)
+  
+  return(data)
+}
+
+#' compute relative impact point estimates across selected grouping variables
+#' point estimate is estimated as nb doses observed / nb doses counterfactual
+#' code assumes only fit (or observed) and counterfactual are supplied, and that 
+#' the counterfactual is the second level in the factor
+compute_impact_rel <- function(data, date_select, var_group_by = "age",
+                               numer = "n_vacc_1dose"){
+  # limit to selected date for impact and order
+  data <- data %>% filter(date_wk_end == date_select)
+  data <- data %>% arrange(across(all_of(c(var_group_by, "type"))))
+  
+  # compute relative increase between observed/fitted and counterfactual scenario
+  data <- data %>% 
+    group_by(across(all_of(var_group_by))) %>% 
+    mutate(impact = get(numer) / lead(get(numer))) %>% 
+    ungroup()
+  data <- data %>% filter(!is.na(impact))
+  
+  # adjust to show as %
+  data <- data %>% mutate(impact = 100*(impact - 1))
+  
+  # select only necessary variables
+  data <- data %>% select(type, all_of(var_group_by), date_wk_end, impact, 
+                          all_of(c(numer))
+  )
+  
+  return(data)
+}
+
+compute_impact_rel_ci <- function(data_bootstrap, data_observed_,
+                                  date_select, var_group_by = "age",
+                                  numer = "n_vacc_1dose"){
+  # create a replicate of the observed data for each bootstrap
+  indx_rep <- which(data_observed_$date_wk_end == MODEL_END)
+  data_obs_dupl <- data_observed_[rep(indx_rep, max(data_bootstrap$replicate_nb)),] %>% 
+    group_by(across(all_of(var_group_by))) %>% 
+    mutate(type = "a_observed", replicate_nb = 1:n()) %>% 
+    ungroup()
+  
+  # compute the impact in each replicate
+  data_imp <- bind_rows(data_bootstrap %>% filter(type == "No passport\n(counterfactual)"),
+                        data_obs_dupl)
+  impact_ci <- compute_impact_rel(data_imp, date_select = date_select, 
+                                  var_group_by = c("replicate_nb", var_group_by),
+                                  numer = numer)
+  
+  # compute 95% confidence interval
+  impact_ci <- impact_ci %>% 
+    group_by(across(all_of(var_group_by)), date_wk_end) %>% 
+    summarize(impact_lci = quantile(impact, .025), impact_uci = quantile(impact, .975),
+              .groups = "drop")
+  
+  # return dataset
+  return(impact_ci)
+}
+
+# compute bootstrapped confidence intervals (rate and coverage)
 compute_boot_ci <- function(data, group_var,
                             numer = "rate_1dose", denom = "n_unvax"){
   
@@ -331,4 +405,13 @@ save_model_coeff <- function(fit, model_name){
   broom::tidy(fit) %>% 
       mutate(estimate_exp = exp(estimate), .after = estimate) %>% 
       fwrite(file = sprintf("%s/its-coeff/%s_%s%s.csv", path_out, model_name, PROVINCE, CMA_suffix))
+}
+
+# use decimal places only if abs(effect) is <10
+round_fn <- function(x){
+  if(x > -10 & x < 10){
+    format(round(x, 1), nsmall = 1)
+  } else {
+    format(round(x, 0), nsmall = 0)
+  }
 }

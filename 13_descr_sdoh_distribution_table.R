@@ -31,15 +31,35 @@ for(PROVINCE in c("qc", "on")){
     data_inc <- data_coverage %>% 
       filter(date_wk_end == min(date_wk_end)) %>% 
       group_by(quin_income) %>% 
-      summarize(nb_da = n()/6, nb_ppl = sum(pop_rpdb),
-                across(ATIPPE, .fns = c(min = min, max = max, mean = mean, median = median)))
+      summarize(
+        nb_da = n()/6, nb_ppl = sum(pop_rpdb),
+        across(ATIPPE, .fns = c(min = min, max = max, mean = mean, median = median))
+      )
     data_vis <- data_coverage %>% 
       filter(date_wk_end == min(date_wk_end)) %>% 
       group_by(quin_vismin) %>% 
-      summarize(nb_da = n()/6, nb_ppl = sum(pop_rpdb),
-                across(Visible_minority_Overall, .fns = c(min = min, max = max, mean = mean, median = median)))
+      summarize(
+        nb_da = n()/6, nb_ppl = sum(pop_rpdb),
+        across(Visible_minority_Overall, .fns = c(min = min, max = max, mean = mean, median = median))
+      )
     
-    # TODO rename column(s) + join income and visible minority into single table
+    ## join income and visible minority into single table
+    # format income
+    data_inc <- data_inc %>% 
+      transmute(
+        sdoh = "income",
+        quintile = quin_income, nb_da, nb_ppl,
+        sdoh_range = sprintf("$%s\u2013%s", format(ATIPPE_min, big.mark = ","), format(ATIPPE_max, big.mark = ","))
+      )
+    
+    # format vismin
+    data_vis <- data_vis %>% 
+      transmute(
+        sdoh = "vismin",
+        quintile = quin_vismin, nb_da, nb_ppl,
+        sdoh_range = sprintf("$%s\u2013%s%%", round(Visible_minority_Overall_min*100, 1), round(Visible_minority_Overall_max*100, 1))
+      )
+    
     tbl_sdoh_tmp <- bind_rows(data_inc, data_vis)
     
     # Save current region into list ----
@@ -55,7 +75,7 @@ for(PROVINCE in c("qc", "on")){
   }
 }
 
-# TODO subset columns and reorder
+# join into single table for each region level
 tbl_1prov <- bind_rows(tbl_1prov)
 tbl_2cma <- bind_rows(tbl_2cma)
 

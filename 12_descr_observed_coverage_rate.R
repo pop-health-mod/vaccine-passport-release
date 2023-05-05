@@ -21,9 +21,9 @@ for(PROVINCE in c("qc", "on")){
     CMA_suffix <- ifelse(DO_CMA, paste("_", CMA, sep = ""), "")
     
     if(DO_CMA){
-      out_path <- sprintf("../vaccine-passport-data/out/observed-%s-%s", PROVINCE, CMA)
+      path_out <- sprintf("../vaccine-passport-data/out/observed-%s-%s", PROVINCE, CMA)
     } else {
-      out_path <- sprintf("../vaccine-passport-data/out/observed-%s", PROVINCE)
+      path_out <- sprintf("../vaccine-passport-data/out/observed-%s", PROVINCE)
     }
     
     source("./04_setup_load_data.R", echo = TRUE)
@@ -37,7 +37,7 @@ for(PROVINCE in c("qc", "on")){
                                   lapply(.SD, sum),
                                   by = .(date_wk_start, date_wk_end, age),
                                   .SDcols = c("pop_rpdb", "n_unvax", "n_vacc_1dose")]
-    write.csv(data_cov_age, sprintf("%s/cover_1_age%s.csv", out_path, CMA_suffix), row.names = F)
+    write.csv(data_cov_age, sprintf("%s/cover_1_age%s.csv", path_out, CMA_suffix), row.names = F)
     
     ### SDOH, single panels
     # income
@@ -45,14 +45,14 @@ for(PROVINCE in c("qc", "on")){
                                         lapply(.SD, sum), 
                                         by = .(date_wk_start, date_wk_end, quin_income),
                                         .SDcols = c("pop_rpdb", "n_unvax", "n_vacc_1dose")][order(quin_income, date_wk_start)]
-    write.csv(data_cov_income, sprintf("%s/cover_2a_income%s.csv", out_path, CMA_suffix), row.names = F)
+    write.csv(data_cov_income, sprintf("%s/cover_2a_income%s.csv", path_out, CMA_suffix), row.names = F)
     
     # visible minority
     data_cov_vismin <- data_coverage_da[,
                                         lapply(.SD, sum), 
                                         by = .(date_wk_start, date_wk_end, quin_vismin),
                                         .SDcols = c("pop_rpdb", "n_unvax", "n_vacc_1dose")][order(quin_vismin, date_wk_start)]
-    write.csv(data_cov_vismin, sprintf("%s/cover_2b_vismin%s.csv", out_path, CMA_suffix), row.names = F)
+    write.csv(data_cov_vismin, sprintf("%s/cover_2b_vismin%s.csv", path_out, CMA_suffix), row.names = F)
     
     # Age x SDOH interaction coverage ----
     # income x age
@@ -60,14 +60,14 @@ for(PROVINCE in c("qc", "on")){
                                          lapply(.SD, sum), 
                                          by = .(date_wk_start, date_wk_end, quin_income, age),
                                          .SDcols = c("pop_rpdb", "n_unvax", "n_vacc_1dose")][order(quin_income, age, date_wk_start)]
-    write.csv(data_cov_age.income, sprintf("%s/cover_3a_age.income%s.csv", out_path, CMA_suffix), row.names = F)
+    write.csv(data_cov_age.income, sprintf("%s/cover_3a_age.income%s.csv", path_out, CMA_suffix), row.names = F)
     
     # visible minority x age
     data_cov_age.vismin <- data_coverage[,
                                          lapply(.SD, sum), 
                                          by = .(date_wk_start, date_wk_end, quin_vismin, age),
                                          .SDcols = c("pop_rpdb", "n_unvax", "n_vacc_1dose")][order(quin_vismin, age, date_wk_start)]
-    write.csv(data_cov_age.vismin, sprintf("%s/cover_3b_age.vismin%s.csv", out_path, CMA_suffix), row.names = F)
+    write.csv(data_cov_age.vismin, sprintf("%s/cover_3b_age.vismin%s.csv", path_out, CMA_suffix), row.names = F)
     
   }
 }
