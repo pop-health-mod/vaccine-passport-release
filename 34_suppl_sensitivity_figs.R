@@ -48,10 +48,10 @@ for(PROVINCE in c("qc", "on")){
   }
   
   # directories
-  path_sens <- sprintf("./vaccine-passport-data/out/its-sensitivity-%s", PROVINCE)
-  path_obs <- sprintf("./vaccine-passport-data/out/observed-%s", PROVINCE)
-  path_its <- sprintf("./vaccine-passport-data/out/its-fit-%s", PROVINCE)
-  path_boot <- sprintf("./vaccine-passport-data/out/its-boot-%s", PROVINCE)
+  path_sens <- sprintf("../vaccine-passport-data/out/its-sensitivity-%s", PROVINCE)
+  path_obs <- sprintf("../vaccine-passport-data/out/observed-%s", PROVINCE)
+  path_its <- sprintf("../vaccine-passport-data/out/its-fit-%s", PROVINCE)
+  path_boot <- sprintf("../vaccine-passport-data/out/its-boot-%s", PROVINCE)
   
   # tibble for policy milestones labels
   policy_txt <- tibble(event = c("Announ.", "Implem."),
@@ -252,7 +252,7 @@ grid.arrange(plt_cover_ls[["qc"]][["ts_start"]],
 draw_sensitivity_labs("Start of timeseries: July 3rd (main model)",
                       "Start of timeseries: June 26th",
                       "Start of timeseries: July 10th",
-                      y_pos = 0.05)
+                      x_pos = 0.05)
 dev.off()
 
 ## save alternative lengths of passport impact
@@ -267,7 +267,7 @@ grid.arrange(plt_cover_ls[["qc"]][["alt_length"]],
 draw_sensitivity_labs("The effect of the vaccine passport lasts 6 weeks (main model)",
                       "The effect of the vaccine passport lasts 5 weeks",
                       "The effect of the vaccine passport lasts 7 weeks",
-                      y_pos = 0.05)
+                      x_pos = 0.05)
 dev.off()
 
 # rate
@@ -281,7 +281,7 @@ grid.arrange(plt_rate_ls[["qc"]][["alt_length"]],
 draw_sensitivity_labs("The effect of the vaccine passport lasts 6 weeks (main model)",
                       "The effect of the vaccine passport lasts 5 weeks",
                       "The effect of the vaccine passport lasts 7 weeks",
-                      y_pos = 0.072)
+                      x_pos = 0.072)
 dev.off()
 
 ## save alternative model specifications
@@ -297,7 +297,7 @@ draw_sensitivity_labs("Vaccination rate modeled with a natural cubic spline (mai
                       "Vaccination rate modeled with a different intercept and slope after the vaccine passport impact period",
                       "Vaccination rate modeled as log-linear",
                       lab_e = "Vaccination rate modeled with a quadratic term and a different intercept and slope for July",
-                      y_pos = 0.05)
+                      x_pos = 0.05)
 dev.off()
 
 # rate
@@ -312,5 +312,5 @@ draw_sensitivity_labs("Vaccination rate modeled with a natural cubic spline (mai
                       "Vaccination rate modeled with a different intercept and slope after the vaccine passport impact period",
                       "Vaccination rate modeled as log-linear",
                       lab_e = "Vaccination rate modeled with a quadratic term and a different intercept and slope for July",
-                      y_pos = 0.072)
+                      x_pos = 0.072)
 dev.off()

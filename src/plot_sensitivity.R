@@ -105,23 +105,33 @@ plot_sensitivity_rate <- function(data_sens, impact_txt_sens, sens_var,
     theme(legend.position = "none")
 }
 
-#' y_pos should be 0.05 for coverage and 0.072 for rate
+#' x_pos should be 0.05 for coverage and 0.072 for rate
 draw_sensitivity_labs <- function(lab_a, lab_b, lab_c,
                                   lab_d = NULL, lab_e = NULL, lab_f = NULL,
-                                  y_pos){
+                                  x_pos){
   # Quebec labels
-  grid.text(sprintf("A) %s", lab_a), y_pos, 0.994, just = "left",
+  grid.text(sprintf("A) %s", lab_a), x_pos, 0.994, just = "left",
             gp = gpar(fontsize = 18))
-  grid.text(sprintf("B) %s", lab_b), y_pos, 0.847, just = "left",
+  grid.text(sprintf("B) %s", lab_b), x_pos, 0.847, just = "left",
             gp = gpar(fontsize = 18))
-  grid.text(sprintf("C) %s", lab_c), y_pos, 0.70, just = "left",
+  grid.text(sprintf("C) %s", lab_c), x_pos, 0.70, just = "left",
             gp = gpar(fontsize = 18))
   # Ontario labels
-  grid.text(sprintf("D) %s", ifelse(is.null(lab_d), lab_a, lab_d)), y_pos, 0.515, just = "left",
+  grid.text(sprintf("D) %s", ifelse(is.null(lab_d), lab_a, lab_d)), x_pos, 0.515, just = "left",
             gp = gpar(fontsize = 18))
-  grid.text(sprintf("E) %s", ifelse(is.null(lab_e), lab_b, lab_e)), y_pos, 0.368, just = "left",
+  grid.text(sprintf("E) %s", ifelse(is.null(lab_e), lab_b, lab_e)), x_pos, 0.368, just = "left",
             gp = gpar(fontsize = 18))
-  grid.text(sprintf("F) %s", ifelse(is.null(lab_f), lab_c, lab_f)), y_pos, 0.221, just = "left",
+  grid.text(sprintf("F) %s", ifelse(is.null(lab_f), lab_c, lab_f)), x_pos, 0.221, just = "left",
+            gp = gpar(fontsize = 18))
+}
+
+#' function specifically for case fit figure
+draw_sensitivity_labs_qc <- function(lab_a, lab_b,
+                                     x_pos){
+  # Quebec labels
+  grid.text(sprintf("A) %s", lab_a), x_pos, 0.976, just = "left",
+            gp = gpar(fontsize = 18))
+  grid.text(sprintf("B) %s", lab_b), x_pos, 0.59, just = "left",
             gp = gpar(fontsize = 18))
 }
 

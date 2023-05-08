@@ -133,7 +133,7 @@ p_legend <- cowplot::get_legend(
 
 {
   # age
-  png("./fig/fig_S11_distrib_rate_age.png",
+  png("./fig/fig_S12_distrib_rate_age.png",
       width = 17, height = 20, units = "cm", res = 600,
       type = "cairo-png")
   grid.arrange(
@@ -147,7 +147,7 @@ p_legend <- cowplot::get_legend(
   dev.off()
   
   # income
-  png("./fig/fig_S12_distrib_rate_income.png",
+  png("./fig/fig_S13_distrib_rate_income.png",
       width = 17, height = 20, units = "cm", res = 600,
       type = "cairo-png")
   grid.arrange(
@@ -161,7 +161,7 @@ p_legend <- cowplot::get_legend(
   dev.off()
 
   # visible minority
-  png("./fig/fig_S13_distrib_rate_vismin.png",
+  png("./fig/fig_S14_distrib_rate_vismin.png",
       width = 17, height = 20, units = "cm", res = 600,
       type = "cairo-png")
   grid.arrange(
