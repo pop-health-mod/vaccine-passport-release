@@ -57,7 +57,7 @@ for(PROVINCE in c("qc", "on")){
       transmute(
         sdoh = "vismin",
         quintile = quin_vismin, nb_da, nb_ppl,
-        sdoh_range = sprintf("$%s\u2013%s%%", round(Visible_minority_Overall_min*100, 1), round(Visible_minority_Overall_max*100, 1))
+        sdoh_range = sprintf("%s\u2013%s%%", round(Visible_minority_Overall_min*100, 1), round(Visible_minority_Overall_max*100, 1))
       )
     
     tbl_sdoh_tmp <- bind_rows(data_inc, data_vis)
