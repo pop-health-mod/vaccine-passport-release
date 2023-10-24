@@ -267,7 +267,7 @@ compute_impact_ci <- function(data_bootstrap, data_observed_,
   indx_rep <- which(data_observed_$date_wk_end == MODEL_END)
   data_obs_dupl <- data_observed_[rep(indx_rep, max(data_bootstrap$replicate_nb)),] %>% 
     group_by(across(all_of(var_group_by))) %>% 
-    mutate(type = "a_observed", replicate_nb = 1:n()) %>% 
+    mutate(type = "A_observed", replicate_nb = 1:n()) %>% 
     ungroup()
   
   # compute the impact in each replicate
@@ -342,7 +342,7 @@ compute_impact_rel_ci <- function(data_bootstrap, data_observed_,
   indx_rep <- which(data_observed_$date_wk_end == MODEL_END)
   data_obs_dupl <- data_observed_[rep(indx_rep, max(data_bootstrap$replicate_nb)),] %>% 
     group_by(across(all_of(var_group_by))) %>% 
-    mutate(type = "a_observed", replicate_nb = 1:n()) %>% 
+    mutate(type = "A_observed", replicate_nb = 1:n()) %>% 
     ungroup()
   
   # compute the impact in each replicate

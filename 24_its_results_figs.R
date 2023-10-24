@@ -74,7 +74,7 @@ for(PROVINCE in c("qc", "on")){
     
     ## impact (point estimate)
     # compare to observed
-    data_impact <- bind_rows(data_observed %>% mutate(type = "a_observed"),
+    data_impact <- bind_rows(data_observed %>% mutate(type = "A_observed"),
                              data_its %>% filter(type == "No passport\n(counterfactual)"))
     
     impact_pt <- compute_impact(data_impact, MODEL_END,
@@ -393,12 +393,12 @@ for(PROVINCE in c("qc", "on")){
     ### compute impact of vaccine passport
     ## point estimates
     # income
-    data_impact <- bind_rows(data_obs_income %>% mutate(type = "a_observed"),
+    data_impact <- bind_rows(data_obs_income %>% mutate(type = "A_observed"),
                              results_income %>% filter(type == "No passport\n(counterfactual)"))
     impact_income <- compute_impact(data_impact, MODEL_END, c("age", "quin_income"))
     
     # visible minority
-    data_impact <- bind_rows(data_obs_vismin %>% mutate(type = "a_observed"),
+    data_impact <- bind_rows(data_obs_vismin %>% mutate(type = "A_observed"),
                              results_vismin %>% filter(type == "No passport\n(counterfactual)"))
     impact_vismin <- compute_impact(data_impact, MODEL_END, c("age", "quin_vismin"))
     rm(data_impact)
